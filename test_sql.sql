@@ -9,7 +9,21 @@ indexes as (
     ORDER BY updated_at
 ),
 result as (
-    select t.transaction_id, ind.updated_at, ind.exchange, ind.exchange_type from trades t
+    select t.transaction_id, 
+        t.exchange, 
+        t.exchange_type,
+        t.account_id,
+        t.client_id,
+        t.currency_1,
+        t.currency_2,
+        t.from_address,
+        t.to_address,
+        t.executed_at,
+        t.size,
+        t.price,
+        ind.updated_at as "index_updated_at",
+        ind.value as "index_value"
+    from trades t
     LEFT JOIN LATERAL (
         SELECT * from indexes i
         ORDER BY ABS(EXTRACT(EPOCH FROM t.executed_at - i.updated_at))
